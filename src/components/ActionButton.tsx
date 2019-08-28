@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Icon from "./Icon";
 
 interface Props {
   subText?: string;
@@ -9,27 +10,16 @@ interface Props {
 }
 
 const ActionButton: React.FC<Props> = (props) => {
-  const { text, subText, textColor = '#333', icon} = props;
+  const { text, subText, textColor = '#333', icon } = props;
 
   return (
     <Button>
+      <Icon icon={'equalizer'} color={'#2886fa'}/>
       {subText && <SubText>{subText}</SubText> }
       <Text color={textColor}>{text}</Text>
     </Button>
   );
 };
-
-// ActionButton.defaultProps = {
-//   textColor: '#333',
-// };
-
-const Icon = styled.i`
-  font-family: \'icomoon\';
-  &:before {
-    content: "\\ea0c";
-    color: #0092fc; // props;
-  }
-`;
 
 const SubText = styled.span`
   margin-right: 5px;

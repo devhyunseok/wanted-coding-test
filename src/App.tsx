@@ -2,6 +2,10 @@ import React, { Fragment } from 'react';
 import GlobalStyle from "./GlobalStyles";
 import ActionButton from "./components/ActionButton";
 import FlexHorizontalWrapper from "./components/flexList/FlexHorizontalWrapper";
+import FilterModal from "./components/FilterModal";
+import ReactModal from 'react-modal';
+
+ReactModal.setAppElement('#root');
 
 const App: React.FC = () => {
   return (
@@ -13,6 +17,7 @@ const App: React.FC = () => {
       <ActionButton subText={'경력'} text={'전체'}/>
       <ActionButton text={'필터'} textColor={'#0092fc'}/>
       <FlexHorizontalWrapper/>
+      <FilterModal/>
     </Fragment>
   );
 };

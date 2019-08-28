@@ -9,7 +9,7 @@ interface Props {
   icon?: string;
 }
 
-const FlexListItem: React.FC<Props> = (props) => {
+const ActiveRecruitItem: React.FC<Props> = (props) => {
   const { title, subTitle, profileImg, bgImg} = props;
 
   return (
@@ -86,11 +86,28 @@ const ProfileImage = styled.img`
 `;
 
 const Title = styled.h4`
-
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: #333;
+  line-height: 1.2;
+  margin: 4px 0;
+  overflow: hidden;
+  max-height: 58px;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const SubTitle = styled.h5`
-
+  color: #999;
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: -0.2px;
+  line-height: 1.1;
 `;
 
-export default FlexListItem;
+export default ActiveRecruitItem;
