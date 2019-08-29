@@ -5,12 +5,16 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware, compose } from 'redux';
 import createSagaMiddleware from 'redux-saga';
-// import rootSagas from 'share/sagas/rootSagas';
+import combineSagas from './sagas/combineSagas';
 import { BrowserRouter } from 'react-router-dom';
 import combineReducers from './modules/combineReducers';
 // import * as serviceWorker from './serviceWorker';
 
-let store = createStore(combineReducers);
+const sagaMiddleware = createSagaMiddleware();
+
+let store = createStore(combineReducers, applyMiddleware(sagaMiddleware));
+
+sagaMiddleware.run(combineSagas);
 
 const app = (
   <Provider store={store}>

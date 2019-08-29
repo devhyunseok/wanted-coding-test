@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
-import applicationReducer from "./applicationReducer";
+import jobListReducer from "./jobListReducer";
 
 export default combineReducers({
-  application: applicationReducer,
+  jobs: jobListReducer,
 });

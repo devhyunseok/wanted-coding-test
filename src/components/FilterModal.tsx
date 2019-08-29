@@ -20,15 +20,13 @@ const FilterModal: React.FC<Props> = (props) => {
       // className={setDefaultIsNull(this.props.overrideClassName, [styles.dialogContent, this.props.className].join(' '))}>
 >
       <Header>
-        <Icon icon={'spinner11'}/>초기화
-        <button>
-
-        </button>
+        <Reset>
+          <Icon icon={'spinner11'}/>초기화
+        </Reset>
         <span>필터</span>
-        <Icon icon={'cross'}/>
-        <button>
-
-        </button>
+        <Close>
+          <Icon icon={'cross'}/>
+        </Close>
       </Header>
       <div>
 
@@ -61,6 +59,29 @@ const Header = styled.header`
   font-size: 16px;
   font-weight: 600;
   word-wrap: break-word;
+`;
+
+const Reset = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left 0;
+  transform: translateY(-50%);
+  padding: 15px;
+  line-height: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #999;
+  text-align: left;
+`;
+
+const Close = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  padding: 15px;
+  line-height: 0;
 `;
 
 

@@ -4,6 +4,7 @@ import ActionButton from "./components/ActionButton";
 import FlexHorizontalWrapper from "./components/flexList/FlexHorizontalWrapper";
 import FilterModal from "./components/FilterModal";
 import ReactModal from 'react-modal';
+import CounterContainer from "./containers/jobsContainers";
 
 ReactModal.setAppElement('#root');
 
@@ -18,6 +19,7 @@ const App: React.FC = () => {
       <ActionButton text={'필터'} textColor={'#0092fc'}/>
       <FlexHorizontalWrapper/>
       <FilterModal/>
+      <CounterContainer/>
     </Fragment>
   );
 };

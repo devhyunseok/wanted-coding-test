@@ -28,8 +28,7 @@ export const actions = {
  * Reducer
  */
 const initialState = {
-  isForbidden: false,
-  isNavigationMenuVisible: true,
+  isForbidden: false
 };
 
 export default handleActions({
