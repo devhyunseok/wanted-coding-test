@@ -8,11 +8,18 @@ import createSagaMiddleware from 'redux-saga';
 import combineSagas from './sagas/combineSagas';
 import { BrowserRouter } from 'react-router-dom';
 import combineReducers from './modules/combineReducers';
+import ReactModal from 'react-modal';
 // import * as serviceWorker from './serviceWorker';
+import { createLogger } from 'redux-logger';
+
+const logger = createLogger();
+
+
+ReactModal.setAppElement('#root');
 
 const sagaMiddleware = createSagaMiddleware();
-
-let store = createStore(combineReducers, applyMiddleware(sagaMiddleware));
+const middleware = [ sagaMiddleware, logger ];
+let store = createStore(combineReducers, applyMiddleware(...middleware));
 
 sagaMiddleware.run(combineSagas);
 

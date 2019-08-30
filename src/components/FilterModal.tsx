@@ -1,20 +1,22 @@
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
 import Modal from './StyledModal';
 import styled from 'styled-components';
 import Icon from "./Icon";
 
 interface Props {
-
+  isOpen: boolean;
+  onClickCloseButton?: MouseEventHandler;
+  setVisible: (isVisible: boolean) => void;
 }
 
 const FilterModal: React.FC<Props> = (props) => {
-  const {} = props;
+  const { isOpen, onClickCloseButton, setVisible } = props;
 
   return (
     <Modal
-      isOpen={true}
+      isOpen={isOpen}
       // onRequestClose={this.props.onRequestClose.bind(this)}
-      // shouldCloseOnOverlayClick={this.props.shouldCloseOnOverlayClick}
+      onRequestClose={() => { setVisible(false)}}
       // onAfterOpen={this.props.onAfterOpen.bind(this)}
       // overlayClassName={[styles.overlay, 'bootstrap-dialog', this.props.overlayClassName].join(' ')}
       // className={setDefaultIsNull(this.props.overrideClassName, [styles.dialogContent, this.props.className].join(' '))}>
@@ -24,7 +26,7 @@ const FilterModal: React.FC<Props> = (props) => {
           <Icon icon={'spinner11'}/>초기화
         </Reset>
         <span>필터</span>
-        <Close>
+        <Close onClick={onClickCloseButton}>
           <Icon icon={'cross'}/>
         </Close>
       </Header>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
 import styled from 'styled-components';
 import Icon from "./Icon";
 
@@ -7,14 +7,15 @@ interface Props {
   text: string;
   textColor?: string;
   icon?: string;
+  onClick?: MouseEventHandler;
 }
 
 const ActionButton: React.FC<Props> = (props) => {
-  const { text, subText, textColor = '#333', icon } = props;
+  const { text, subText, textColor = '#333', icon, onClick } = props;
 
   return (
-    <Button>
-      <Icon icon={'equalizer'} color={'#2886fa'}/>
+    <Button onClick={onClick}>
+      {icon && <Icon icon={'equalizer'} color={'#2886fa'}/> }
       {subText && <SubText>{subText}</SubText> }
       <Text color={textColor}>{text}</Text>
     </Button>
