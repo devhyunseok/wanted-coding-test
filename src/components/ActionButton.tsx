@@ -43,6 +43,10 @@ const Button = styled.button`
   &:hover {
     background-color: #f9f9f9;
   }
+
+  & + & {
+    margin-left: 10px;
+  }
 `;
 
 export default ActionButton;

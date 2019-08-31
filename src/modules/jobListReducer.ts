@@ -1,41 +1,35 @@
-/*
- * HyunSeok Kim
- * 2019.05.02
- * Last Modify: 2019.05.02 HyunSeok Kim
- * @copyright © 2019, NHN godo: Corp.
- */
-
 import { createAction, handleActions } from 'redux-actions';
+
 /**
  * Action Types
  */
-const APP = 'APPLICATION__';
-// 메뉴 접근 시, 미리보기 앱 권한 체크
-export const UNAUTH_USER = `${APP}UNAUTH_USER`;
-export const AUTH_USER = `${APP}AUTH_USER`;
-// 좌측 메뉴
-const OPEN_NAVIGATION_MENU = `${APP}OPEN_NAVIGATION_MENU`;
-const CLOSE_NAVIGATION_MENU = `${APP}CLOSE_NAVIGATION_MENU`;
+const APP = 'JOB_LIST__';
+// 필터 사용 여부
 
 /**
  * Actions
  */
-export const actions = {
-  unAuthUser: createAction(UNAUTH_USER),
-};
 
 /**
  * Reducer
  */
+
 const initialState = {
-  isForbidden: false
+
 };
 
-export default handleActions({
-  [UNAUTH_USER]: (state, action) => {
-    return {
-      ...state,
-      isForbidden: true
+const arrayToObject = (array: any) => {
+  const newObj: any = {};
+
+  array.forEach((item: { key: string | number; }) => {
+    newObj[item.key] = {
+      ...item
     }
-  },
+  });
+
+  return newObj
+}
+
+export default handleActions({
+
 }, initialState);

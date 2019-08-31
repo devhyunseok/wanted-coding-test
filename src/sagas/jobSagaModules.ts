@@ -1,7 +1,9 @@
-import {takeEvery, select, put} from 'redux-saga/effects';
-import {requestApi} from "./commonSagas";
+import {takeEvery, put, call} from 'redux-saga/effects';
 import { createAction } from 'redux-actions';
 import {FILTERS, JOBS} from "../api/apis";
+import { AxiosRequestConfig } from 'axios';
+import axiosInstance from "../api/apis";
+import { push } from 'connected-react-router';
 
 /**
  * Saga Action Types
@@ -37,30 +39,64 @@ interface jobListParams {
  */
 export function* jobListSaga(action: any) {
   const params : jobListParams = action.payload;
+  const requestConfig: AxiosRequestConfig ={
+    method: 'GET',
+    url: JOBS,
+    params: params
+  };
 
-  yield requestApi({
-    requestConfig: {
-      method: 'GET',
-      url: JOBS,
-      params: params
-    },
-    successfully: GET_JOB_LIST_SUCCESSFUL,
-    failure: GET_JOB_LIST_FAILURE
-  });
+  try {
+    const { data } = yield call(axiosInstance.request, requestConfig);
+
+    yield put({type: GET_JOB_LIST_SUCCESSFUL, payload: data});
+  } catch (error) {
+    yield put({type: GET_JOB_LIST_FAILURE, payload: error});
+  }
+
 }
 
 /**
  * 공고 필터 정보 조회
  */
 export function* jobFiltersSaga() {
-  yield requestApi({
-    requestConfig: {
-      method: 'GET',
-      url: FILTERS
-    },
-    successfully: GET_JOB_FILTERS_SUCCESSFUL,
-    failure: GET_JOB_FILTERS_FAILURE
-  });
+  const requestConfig: AxiosRequestConfig = {
+    method: 'GET',
+    url: FILTERS
+  };
+
+  try {
+    const { data } = yield call(axiosInstance.request, requestConfig);
+    const { countries, job_sort, years } = data;
+    const country = countries.filter((item:any) => item.selected)[0];
+    const jobSort = job_sort.filter((item:any) => item.selected)[0];
+    const year = years.filter((item:any) => item.selected)[0];
+    let locations = [];
+    let locationsString = '';
+
+    if(country.locations.length > 0) {
+      locations = country.locations.filter((item:any) => item.selected);
+      locationsString = locations.reduce((acc:any, cur:any) => {
+        if(cur.selected) {
+          return `${acc}&locations=${cur.key}`
+        }
+        return ''
+      });
+    }
+
+    const queryString = `/?country=${country.key}&job_sort=${jobSort.key}&year=${year.key}${locationsString}`;
+
+    yield put(push(queryString));
+    yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
+        ...data,
+        country: country,
+        jobSort: jobSort,
+        year: year,
+        locations: locations
+      }
+    });
+  } catch (error) {
+    yield put({type: GET_JOB_FILTERS_FAILURE, payload: error});
+  }
 }
 
 export default [

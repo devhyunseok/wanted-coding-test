@@ -1,0 +1,197 @@
+import React, {MouseEventHandler, Fragment} from 'react';
+import Modal from '../components/StyledModal';
+import styled from 'styled-components';
+import Icon from "../components/Icon";
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilterUsed, selectJobSort, selectCountry } from 'modules/jobFilterReducer';
+import SelectBox from '../components/SelectBox';
+import FilterItemButton from 'components/FilterItemButton';
+
+interface Props {
+  isOpen: boolean;
+  onClickCloseButton?: MouseEventHandler;
+  setVisible: (isVisible: boolean) => void;
+}
+
+const locationsView = (selectedCountry: any) => {
+  const locations = selectedCountry.locations;
+
+  console.log(locations);
+
+  if(locations && locations.length === 0) {
+    return null;
+  }
+
+  return (
+    <Fragment>
+      <HeaderTitle>지역</HeaderTitle>
+      {
+        locations && locations.map((item:any, index: number) => {
+          return <FilterItemButton key={index} value={item.key} 
+          //isSelected={item.key === selectedCountry} 
+          //onClick={(e, value)=> dispatch(selectCountry(value))}
+          >
+          {item.display}
+          </FilterItemButton>
+        })
+      }
+    </Fragment>
+  )
+};
+
+const FilterModal: React.FC<Props> = (props) => {
+  const { isOpen, onClickCloseButton, setVisible } = props;
+  const dispatch = useDispatch();
+  const filter: any = useSelector((state: any) => state.jobFilter);
+  const { countries, selectedCountry } = filter;
+  
+  return (
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={() => { setVisible(false)}}
+      // onAfterOpen={this.props.onAfterOpen.bind(this)}
+      // overlayClassName={[styles.overlay, 'bootstrap-dialog', this.props.overlayClassName].join(' ')}
+      // className={setDefaultIsNull(this.props.overrideClassName, [styles.dialogContent, this.props.className].join(' '))}>
+>
+      <Header>
+        <Reset>
+          <Icon icon={'spinner11'}/>초기화
+        </Reset>
+        <span>필터</span>
+        <Close onClick={onClickCloseButton}>
+          <Icon icon={'cross'}/>
+        </Close>
+      </Header>
+      <Content>
+          <SortWrapper>
+            <HeaderTitle>정렬</HeaderTitle>
+            <SelectBox value={filter.selectedJobSort} options={filter.jobSort} 
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(selectJobSort(e.target.value))}/>
+          </SortWrapper>
+          <CountriesWrapper>
+            <HeaderTitle>국가</HeaderTitle>
+            {
+              countries && countries.map((item:any, index: number) => {
+                return <FilterItemButton key={index} value={item} 
+                isSelected={item.key === selectedCountry.key} 
+                onClick={(e, value)=> dispatch(selectCountry(value))}>{item.display}</FilterItemButton>
+              })
+            }
+          </CountriesWrapper>
+          <LocationsWrapper>
+            { locationsView(selectedCountry) }
+          </LocationsWrapper>
+          <CareerYearWrapper>
+            <HeaderTitle>경력</HeaderTitle>
+          </CareerYearWrapper>
+          <SavedFilterWrapper>
+            <CheckBox type="checkbox" 
+            checked={filter.isUsingFilter}
+            onChange={(e) => dispatch(setFilterUsed(e.target.checked))}
+            />
+          </SavedFilterWrapper>
+      </Content>
+      <footer>
+
+      </footer>
+      {/*{this.props.isHideHeader ? '' :*/}
+        {/*<div className={['modal-header', styles.dialogHeader].join(' ')}>*/}
+          {/*<div className="bootstrap-dialog bootstrap-dialog-close-button" hidden={this.props.isHiddenBtnClose}>*/}
+            {/*<button className="close" onClick={this.props.onCloseButton}>×</button>*/}
+          {/*</div>*/}
+          {/*<div className="bootstrap-dialog-title" style={{ height: '18px'}}>{this.props.title}</div>*/}
+        {/*</div>*/}
+      {/*}*/}
+      {/*<div className={isNull(this.props.contentClassName) ? styles.dialogContentContainer : this.props.contentClassName}>*/}
+        {/*{this.props.children}*/}
+      {/*</div>*/}
+    </Modal>
+    )
+};
+
+const Header = styled.header`
+  height: 54px;
+  padding: 16px 20px;
+  position: relative;
+  border-bottom: 1px solid #eee;
+  color: #333;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  word-wrap: break-word;
+`;
+
+const Reset = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left 0;
+  transform: translateY(-50%);
+  padding: 15px;
+  line-height: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #999;
+  text-align: left;
+`;
+
+const Close = styled.button`
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  padding: 15px;
+  line-height: 0;
+`;
+
+const Content = styled.div`
+  max-height: calc(100vh - 295px);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding: 20px;
+`;
+
+const SortWrapper = styled.div`
+  margin: 10px 0 30px;
+`;
+
+const CountriesWrapper = styled.div`
+  margin: 10px 0 20px;
+`;
+
+const LocationsWrapper = styled.div`
+  margin: 10px 0 20px;
+`;
+
+const CareerYearWrapper = styled.div`
+  margin: 10px 0 30px;
+`;
+
+const SavedFilterWrapper = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  color: #333;
+  margin-bottom: 10px;
+`;
+
+const HeaderTitle = styled.h6`
+  font-size: 16px;
+  font-weight: 400;
+  color: #999;
+  margin: 0 0 10px;
+`;
+
+const CheckBox = styled.input`
+  margin: 0 8px 0 0;
+  line-height: normal;
+  box-sizing: border-box;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+`;
+
+
+export default FilterModal;
