@@ -1,9 +1,11 @@
-import {takeEvery, put, call} from 'redux-saga/effects';
+import {takeEvery, put, call, select} from 'redux-saga/effects';
 import { createAction } from 'redux-actions';
 import {FILTERS, JOBS} from "../api/apis";
 import { AxiosRequestConfig } from 'axios';
 import axiosInstance from "../api/apis";
 import { push } from 'connected-react-router';
+import makeFilterQueryString from 'modules/makeFilterQueryString';
+import queryString from 'query-string';
 
 /**
  * Saga Action Types
@@ -55,6 +57,8 @@ export function* jobListSaga(action: any) {
 
 }
 
+
+
 /**
  * 공고 필터 정보 조회
  */
@@ -67,25 +71,40 @@ export function* jobFiltersSaga() {
   try {
     const { data } = yield call(axiosInstance.request, requestConfig);
     const { countries, job_sort, years } = data;
+    const { search } = yield select(state => state.router.location);
+    const query = queryString.parse(search); // "?country=jp&job_sort=job.latest_order&year=-1&locations=all"
+
+    if(Object.keys(query).length !== 0) {
+      const country = countries.filter((item:any) => item.key === query.country)[0];
+      const jobSort = job_sort.filter((item:any) => item.key === query.job_sort)[0];
+      const year = years.filter((item:any) => item.key === query.year)[0];
+      let locations = [];
+
+      if(query.locations && country.locations.length > 0 && query.locations.length > 0) {
+        locations = country.locations.filter((item:any) => {
+          return query.locations && query.locations.includes(item.key)
+        })
+      }
+
+      yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
+        ...data,
+        country,
+        jobSort,
+        year,
+        locations
+        }
+      });
+      return;
+    }
+
     const country = countries.filter((item:any) => item.selected)[0];
     const jobSort = job_sort.filter((item:any) => item.selected)[0];
     const year = years.filter((item:any) => item.selected)[0];
-    let locations = [];
-    let locationsString = '';
+    const locations = country.locations.length > 0 ? country.locations.filter((item:any) => item.selected) : [];
 
-    if(country.locations.length > 0) {
-      locations = country.locations.filter((item:any) => item.selected);
-      locationsString = locations.reduce((acc:any, cur:any) => {
-        if(cur.selected) {
-          return `${acc}&locations=${cur.key}`
-        }
-        return ''
-      });
-    }
+    const filterQueryString = makeFilterQueryString(country.key, jobSort.key, year.key, locations);
+    yield put(push(filterQueryString));
 
-    const queryString = `/?country=${country.key}&job_sort=${jobSort.key}&year=${year.key}${locationsString}`;
-
-    yield put(push(queryString));
     yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
         ...data,
         country: country,
@@ -95,6 +114,7 @@ export function* jobFiltersSaga() {
       }
     });
   } catch (error) {
+    console.log(error);
     yield put({type: GET_JOB_FILTERS_FAILURE, payload: error});
   }
 }

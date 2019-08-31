@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setFilterUsed, selectJobSort, selectCountry, selectYear, selectLocation } from 'modules/jobFilterReducer';
 import SelectBox from '../components/SelectBox';
 import FilterItemButton from 'components/FilterItemButton';
+import { push } from 'connected-react-router';
+import makeFilterQueryString from 'modules/makeFilterQueryString';
 
 interface Props {
   isOpen: boolean;
@@ -43,7 +45,7 @@ const FilterModal: React.FC<Props> = (props) => {
   const { isOpen, onClickCloseButton, setVisible } = props;
   const dispatch = useDispatch();
   const filter: any = useSelector((state: any) => state.jobFilter);
-  const { countries, selectedCountry, selectedJobSort, jobSort, selectedYear, years, selectedLocations } = filter;
+  const { countries, selectedCountry, selectedSortKey, jobSort, selectedYearKey, years, selectedLocations } = filter;
   
   return (
     <Modal
@@ -65,7 +67,7 @@ const FilterModal: React.FC<Props> = (props) => {
       <Content>
           <SortWrapper>
             <HeaderTitle>정렬</HeaderTitle>
-            <SelectBox value={selectedJobSort} options={jobSort} 
+            <SelectBox value={selectedSortKey} options={jobSort} 
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(selectJobSort(e.target.value))}/>
           </SortWrapper>
           <CountriesWrapper>
@@ -83,7 +85,7 @@ const FilterModal: React.FC<Props> = (props) => {
           </LocationsWrapper>
           <CareerYearWrapper>
             <HeaderTitle>경력</HeaderTitle>
-            <SelectBox value={selectedYear} options={years} 
+            <SelectBox value={selectedYearKey} options={years} 
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(selectYear(e.target.value))}/>
           </CareerYearWrapper>
           <SavedFilterWrapper>
@@ -95,7 +97,13 @@ const FilterModal: React.FC<Props> = (props) => {
           </SavedFilterWrapper>
       </Content>
       <Footer>
-        <SubmitButton>적용</SubmitButton>
+        <SubmitButton onClick={() => {
+          console.log(selectedSortKey);
+
+          const queryString = makeFilterQueryString(selectedCountry.key, selectedSortKey, selectedYearKey, selectedLocations);
+          console.log(queryString);
+          dispatch(push(queryString));
+        }}>적용</SubmitButton>
       </Footer>
     </Modal>
     )

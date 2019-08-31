@@ -34,8 +34,8 @@ interface State {
   jobSort: JobSort[];
   years:  object[];
   selectedCountry: object,
-  selectedJobSort: object,
-  selectedYear: object,
+  selectedSortKey: string,
+  selectedYearKey: string,
   selectedLocations: object[],
   isUsingFilter: boolean;
 }
@@ -45,8 +45,8 @@ const initialState: State = {
   jobSort: [],
   years: [],
   selectedCountry: {},
-  selectedJobSort: {},
-  selectedYear: {},
+  selectedSortKey: '',
+  selectedYearKey: '',
   selectedLocations: [],
   isUsingFilter: false,
 };
@@ -63,11 +63,13 @@ export default handleActions<State, any>({
   },
   // 필터 > 정렬 값 변경
   [SELECT_JOB_SORT]: (state, action) => {
-    const selectedJobSort = action.payload;
+    const key = action.payload;
+
+    console.log(key);
 
     return {
       ...state,
-      selectedJobSort
+      selectedSortKey: key
     }
   },
   // 필터 > 국가 값 변경
@@ -82,11 +84,11 @@ export default handleActions<State, any>({
   },
   // 필터 > 경력 선택
   [SELECT_YEAR]: (state, action) => {
-    const selectedYear = action.payload;
+    const key = action.payload;
 
     return {
       ...state,
-      selectedYear
+      selectedYearKey: key
     }
   },
   // 필터 > 지역 선택
@@ -127,8 +129,8 @@ export default handleActions<State, any>({
       jobSort: job_sort, 
       years,
       selectedCountry: country,
-      selectedJobSort: jobSort,
-      selectedYear: year,
+      selectedSortKey: jobSort.key,
+      selectedYearKey: year.key,
       selectedLocations: locations
     }
   },
@@ -142,8 +144,8 @@ export default handleActions<State, any>({
       jobSort: [], 
       years: [],
       selectedCountry: {},
-      selectedJobSort: {},
-      selectedYear: {},
+      selectedSortKey: '',
+      selectedYearKey: '',
       selectedLocations: []
     }
   }
