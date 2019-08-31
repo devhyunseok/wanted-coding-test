@@ -3,7 +3,7 @@ import Modal from '../components/StyledModal';
 import styled from 'styled-components';
 import Icon from "../components/Icon";
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilterUsed, selectJobSort, selectCountry } from 'modules/jobFilterReducer';
+import { setFilterUsed, selectJobSort, selectCountry, selectYear, selectLocation } from 'modules/jobFilterReducer';
 import SelectBox from '../components/SelectBox';
 import FilterItemButton from 'components/FilterItemButton';
 
@@ -13,11 +13,11 @@ interface Props {
   setVisible: (isVisible: boolean) => void;
 }
 
-const locationsView = (selectedCountry: any) => {
+const locationsView = (selectedCountry: any, selectedLocations: any, dispatch: any, selectLocation: any) => {
   const locations = selectedCountry.locations;
 
   console.log(locations);
-
+  console.log(selectedLocations);
   if(locations && locations.length === 0) {
     return null;
   }
@@ -27,9 +27,9 @@ const locationsView = (selectedCountry: any) => {
       <HeaderTitle>지역</HeaderTitle>
       {
         locations && locations.map((item:any, index: number) => {
-          return <FilterItemButton key={index} value={item.key} 
-          //isSelected={item.key === selectedCountry} 
-          //onClick={(e, value)=> dispatch(selectCountry(value))}
+          return <FilterItemButton key={index} value={item} 
+          isSelected={selectedLocations.includes(item)} 
+          onClick={(e, value)=> dispatch(selectLocation(value))}
           >
           {item.display}
           </FilterItemButton>
@@ -43,7 +43,7 @@ const FilterModal: React.FC<Props> = (props) => {
   const { isOpen, onClickCloseButton, setVisible } = props;
   const dispatch = useDispatch();
   const filter: any = useSelector((state: any) => state.jobFilter);
-  const { countries, selectedCountry } = filter;
+  const { countries, selectedCountry, selectedJobSort, jobSort, selectedYear, years, selectedLocations } = filter;
   
   return (
     <Modal
@@ -65,7 +65,7 @@ const FilterModal: React.FC<Props> = (props) => {
       <Content>
           <SortWrapper>
             <HeaderTitle>정렬</HeaderTitle>
-            <SelectBox value={filter.selectedJobSort} options={filter.jobSort} 
+            <SelectBox value={selectedJobSort} options={jobSort} 
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(selectJobSort(e.target.value))}/>
           </SortWrapper>
           <CountriesWrapper>
@@ -79,32 +79,24 @@ const FilterModal: React.FC<Props> = (props) => {
             }
           </CountriesWrapper>
           <LocationsWrapper>
-            { locationsView(selectedCountry) }
+            { locationsView(selectedCountry, selectedLocations, dispatch, selectLocation) }
           </LocationsWrapper>
           <CareerYearWrapper>
             <HeaderTitle>경력</HeaderTitle>
+            <SelectBox value={selectedYear} options={years} 
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => dispatch(selectYear(e.target.value))}/>
           </CareerYearWrapper>
           <SavedFilterWrapper>
             <CheckBox type="checkbox" 
             checked={filter.isUsingFilter}
             onChange={(e) => dispatch(setFilterUsed(e.target.checked))}
             />
+            적용된 필터를 저장하고 유지합니다.
           </SavedFilterWrapper>
       </Content>
-      <footer>
-
-      </footer>
-      {/*{this.props.isHideHeader ? '' :*/}
-        {/*<div className={['modal-header', styles.dialogHeader].join(' ')}>*/}
-          {/*<div className="bootstrap-dialog bootstrap-dialog-close-button" hidden={this.props.isHiddenBtnClose}>*/}
-            {/*<button className="close" onClick={this.props.onCloseButton}>×</button>*/}
-          {/*</div>*/}
-          {/*<div className="bootstrap-dialog-title" style={{ height: '18px'}}>{this.props.title}</div>*/}
-        {/*</div>*/}
-      {/*}*/}
-      {/*<div className={isNull(this.props.contentClassName) ? styles.dialogContentContainer : this.props.contentClassName}>*/}
-        {/*{this.props.children}*/}
-      {/*</div>*/}
+      <Footer>
+        <SubmitButton>적용</SubmitButton>
+      </Footer>
     </Modal>
     )
 };
@@ -193,5 +185,19 @@ const CheckBox = styled.input`
   font-size: inherit;
 `;
 
+const Footer = styled.footer`
+  padding: 20px;
+  border-top: 1px solid #eee;
+`;
+
+const SubmitButton = styled.button`
+  color: #fff;
+  background: #238ff4;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 20px;
+  width: 100%;
+  border-radius: 3px;
+`;
 
 export default FilterModal;

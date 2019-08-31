@@ -44,7 +44,7 @@ export const StyledModal = styled(ReactModalAdapter)`
     left: 50%;
     width: 100%;
     max-width: 500px;
-    height: calc(100vh - 150px);
+    max-height: calc(100vh - 150px);
     transform: translate(-50%, -50%);
     border-radius: 5px;
     background-color: #fff;

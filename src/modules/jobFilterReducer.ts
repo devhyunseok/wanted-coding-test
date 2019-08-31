@@ -8,12 +8,17 @@ const JOB_FILTER = 'JOB_FILTER__';
 const SET_FILTER_USED = `${JOB_FILTER}SET_FILTER_USED`;
 const SELECT_JOB_SORT = `${JOB_FILTER}SELECT_JOB_SORT`;
 const SELECT_COUNTRY = `${JOB_FILTER}SELECT_COUNTRY`;
+const SELECT_YEAR = `${JOB_FILTER}SELECT_YEAR`;
+const SELECT_LOCATION = `${JOB_FILTER}SELECT_LOCATION`;
+
 /**
  * Actions
  */
 export const setFilterUsed = createAction(SET_FILTER_USED);
 export const selectJobSort = createAction(SELECT_JOB_SORT);
 export const selectCountry = createAction(SELECT_COUNTRY);
+export const selectYear = createAction(SELECT_YEAR);
+export const selectLocation = createAction(SELECT_LOCATION);
 
 /**
  * Reducer
@@ -26,7 +31,6 @@ interface JobSort {
 
 interface State {
   countries : any;
-  employeeCount: object[];
   jobSort: JobSort[];
   years:  object[];
   selectedCountry: object,
@@ -38,7 +42,6 @@ interface State {
 
 const initialState: State = {
   countries: [],
-  employeeCount: [],
   jobSort: [],
   years: [],
   selectedCountry: {},
@@ -64,7 +67,7 @@ export default handleActions<State, any>({
 
     return {
       ...state,
-      selectedJobSort: selectedJobSort
+      selectedJobSort
     }
   },
   // 필터 > 국가 값 변경
@@ -73,18 +76,54 @@ export default handleActions<State, any>({
 
     return {
       ...state,
-      selectedCountry: selectedCountry
+      selectedCountry,
+      selectedLocations : [...selectedCountry.locations.filter((item:any) => item.key === 'all')]
+    }
+  },
+  // 필터 > 경력 선택
+  [SELECT_YEAR]: (state, action) => {
+    const selectedYear = action.payload;
+
+    return {
+      ...state,
+      selectedYear
+    }
+  },
+  // 필터 > 지역 선택
+  [SELECT_LOCATION]: (state, action) => {
+    const selectedLocation = action.payload;
+
+    if(selectedLocation.key === 'all') {
+      return {
+        ...state,
+        selectedLocations : [selectedLocation]
+      }
+    }
+
+    if(state.selectedLocations.includes(selectedLocation)){
+      return {
+        ...state,
+        selectedLocations : state.selectedLocations.filter((item:any) => {
+          return item.key !== selectedLocation.key;
+        }
+      )}
+    }
+
+    return {
+      ...state,
+      selectedLocations : [...state.selectedLocations, selectedLocation].filter((item: any) => {
+        return item.key !== 'all';
+      })
     }
   },
   [GET_JOB_FILTERS_SUCCESSFUL]: (state, action) => {
     const {
-      countries, employee_count, job_sort, years, country, jobSort, year, locations
+      countries, job_sort, years, country, jobSort, year, locations
     } = action.payload;
 
     return {
       ...state,
       countries, 
-      employeeCount: employee_count, 
       jobSort: job_sort, 
       years,
       selectedCountry: country,
@@ -95,12 +134,11 @@ export default handleActions<State, any>({
   },
   [GET_JOB_FILTERS_FAILURE]: (state, action) => {
     const { error } = action.payload;
-    console.log(error.message);
+    console.log(error);
 
     return {
       ...state,
-      countries: [], 
-      employeeCount: [], 
+      countries: [],
       jobSort: [], 
       years: [],
       selectedCountry: {},
