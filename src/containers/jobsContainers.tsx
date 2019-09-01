@@ -55,7 +55,7 @@ const JobsContainer = () => {
     </FilterWrapper>
     <FlexHorizontalWrapper>
       {
-        jobList.map(((item: IJob) => {
+        jobList && jobList.map(((item: IJob) => {
           return <CompanyItem key={item.id} position={item.position} bgImg={item.title_img.thumb}
           likeCount={item.like_count} href={`${WANTED_URL}/wd/${item.id}`} 
           companyInfo={{ name: item.company.name, country: item.address.country, location: item.address.location}}/>

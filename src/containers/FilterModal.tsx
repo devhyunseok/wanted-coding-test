@@ -8,6 +8,7 @@ import SelectBox from '../components/SelectBox';
 import FilterItemButton from 'components/FilterItemButton';
 import { push } from 'connected-react-router';
 import makeFilterQueryString from 'modules/makeFilterQueryString';
+import { fetchJobList } from 'sagas/jobSagaModules';
 
 interface Props {
   isOpen: boolean;
@@ -98,11 +99,17 @@ const FilterModal: React.FC<Props> = (props) => {
       </Content>
       <Footer>
         <SubmitButton onClick={() => {
-          console.log(selectedSortKey);
-
           const queryString = makeFilterQueryString(selectedCountry.key, selectedSortKey, selectedYearKey, selectedLocations);
-          console.log(queryString);
+
           dispatch(push(queryString));
+          dispatch(fetchJobList({
+            country: selectedCountry.key,
+            tag_type_id: 669,
+            job_sort: selectedSortKey,
+            year: selectedYearKey,
+            locations: selectedLocations.map((item:any) => item.key)
+          }));
+          setVisible(false);
         }}>적용</SubmitButton>
       </Footer>
     </Modal>

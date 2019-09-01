@@ -10,3 +10,6 @@
 
 
 #### 필터 URL 저장 부분
+
+
+#### locations string[] 타입?

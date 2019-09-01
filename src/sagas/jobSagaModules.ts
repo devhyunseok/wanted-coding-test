@@ -6,6 +6,7 @@ import axiosInstance from "../api/apis";
 import { push } from 'connected-react-router';
 import makeFilterQueryString from 'modules/makeFilterQueryString';
 import queryString from 'query-string';
+import { IJobFilterParams } from 'sagas/IJobFilter';
 
 /**
  * Saga Action Types
@@ -28,27 +29,26 @@ export const GET_JOB_FILTERS_FAILURE = `${JOB_SAGA}GET_JOB_FILTERS_FAILURE`;
 export const fetchJobList = createAction(GET_JOB_LIST_ASYNC);
 export const fetchJobFilters = createAction(GET_JOB_FILTERS_ASYNC);
 
-interface jobListParams {
-  country: string;
-  tag_type_id?: number;
-  job_sort?: string;
-  year?: number;
-  location?: string[];
-}
-
 /**
  * 공고 리스트 조회
  */
-export function* jobListSagaAction(action: any) {
-  const params : jobListParams = action.payload;
+function* jobListSagaAction(action: any) {
+  const params : IJobFilterParams = action.payload;
   yield jobListSaga(params);
 }
 
-export function* jobListSaga(params: jobListParams) {
+function* jobListSaga(params: IJobFilterParams) {
+  var newParams = new URLSearchParams();
+  newParams.append('country', params.country);
+  newParams.append('tag_type_id', String(params.tag_type_id));
+  newParams.append('job_sort', params.job_sort);
+  newParams.append('counyeartry', String(params.year));
+  params.locations.forEach((item:any) => { newParams.append("locations", item); })
+
   const requestConfig: AxiosRequestConfig ={
     method: 'GET',
-    url: JOBS,
-    params: params
+    url: `${JOBS}`,
+    params: newParams
   };
 
   try {
@@ -108,7 +108,7 @@ const classifyUsingFilter = ({countries, job_sort, years, search} : FilterParams
 /**
  * 공고 필터 정보 조회
  */
-export function* jobFiltersSaga() {
+function* jobFiltersSaga() {
   const requestConfig: AxiosRequestConfig = {
     method: 'GET',
     url: FILTERS
@@ -143,7 +143,7 @@ export function* jobFiltersSaga() {
       country: country.key,
       job_sort: jobSort.key,
       year: year.key,
-      location: locations.map((item:any) => item.key)
+      locations: locations.map((item:any) => item.key)
     }
 
     yield jobListSaga(jobListParams)

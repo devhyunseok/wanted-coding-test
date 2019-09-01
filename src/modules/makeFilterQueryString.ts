@@ -1,4 +1,4 @@
-const makeFilterQueryString = (countryKey: string, sortKey: string, yearKey: string, locations: any) => {
+const makeFilterQueryString = (countryKey: string, sortKey: string, yearKey: number, locations: any) => {
   let locationsString = '';
   
   if(locations.length > 0) {
