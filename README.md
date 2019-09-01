@@ -1,3 +1,8 @@
+## Getting Started
+```sh
+$ npm install
+$ npm start
+```
 
 ## 사용한 주요 라이브러리
 - [create-react-app](https://create-react-app.dev/)
