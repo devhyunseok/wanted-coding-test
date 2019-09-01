@@ -3,7 +3,7 @@ import Modal from '../components/StyledModal';
 import styled from 'styled-components';
 import Icon from "../components/Icon";
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilterUsed, selectJobSort, selectCountry, selectYear, selectLocation } from 'modules/jobFilterReducer';
+import { setFilterUsed, selectJobSort, selectCountry, selectYear, selectLocation, resetJobFilter } from 'modules/jobFilterReducer';
 import SelectBox from '../components/SelectBox';
 import FilterItemButton from 'components/FilterItemButton';
 import { push } from 'connected-react-router';
@@ -48,6 +48,10 @@ const FilterModal: React.FC<Props> = (props) => {
   const filter: any = useSelector((state: any) => state.jobFilter);
   const { countries, selectedCountry, selectedSortKey, jobSort, selectedYearKey, years, selectedLocations } = filter;
   
+  const onClickReset = () => {
+    dispatch(resetJobFilter());
+  }
+
   return (
     <Modal
       isOpen={isOpen}
@@ -57,7 +61,7 @@ const FilterModal: React.FC<Props> = (props) => {
       // className={setDefaultIsNull(this.props.overrideClassName, [styles.dialogContent, this.props.className].join(' '))}>
 >
       <Header>
-        <Reset>
+        <Reset onClick={onClickReset}>
           <Icon icon={'spinner11'}/>초기화
         </Reset>
         <span>필터</span>

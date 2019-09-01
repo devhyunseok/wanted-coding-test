@@ -7,3 +7,9 @@ export interface IJobFilterParams {
     limit?: number;
     offset?: number;
 }
+
+export interface IFilterParams {
+  countries: any;
+  job_sort: any;
+  years: any;
+}

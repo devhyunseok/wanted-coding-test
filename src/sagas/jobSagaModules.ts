@@ -6,7 +6,8 @@ import axiosInstance from "../api/apis";
 import { push } from 'connected-react-router';
 import makeFilterQueryString from 'modules/makeFilterQueryString';
 import queryString from 'query-string';
-import { IJobFilterParams } from 'dataStructure/IJobFilter';
+import { IJobFilterParams, IFilterParams } from 'dataStructure/IJobFilter';
+import { classifySelectedFilter } from 'modules/jobFilterUtils';
 
 /**
  * Saga Action Types
@@ -91,14 +92,7 @@ function* jobListSaga(params: IJobFilterParams, successfully: string, failure: s
 
 }
 
-interface FilterParams {
-  countries: any;
-  job_sort: any;
-  years: any;
-  search: string;
-}
-
-const classifyUsingFilter = ({countries, job_sort, years, search} : FilterParams) => {
+const classifyUsingFilter = ({countries, job_sort, years} : IFilterParams, search: string) => {
   const query = queryString.parse(search);
 
   if(Object.keys(query).length !== 0) {
@@ -120,18 +114,7 @@ const classifyUsingFilter = ({countries, job_sort, years, search} : FilterParams
       locations
       }
   }
-
-  const country = countries.filter((item:any) => item.selected)[0];
-  const jobSort = job_sort.filter((item:any) => item.selected)[0];
-  const year = years.filter((item:any) => item.selected)[0];
-  const locations = country.locations.length > 0 ? country.locations.filter((item:any) => item.selected) : [];
-
-   return {
-     country,
-      jobSort,
-      year,
-      locations
-    }
+  return classifySelectedFilter({countries, job_sort, years});
 };
 
 
@@ -152,9 +135,8 @@ function* jobFiltersSaga() {
     const { country, jobSort, year, locations } = classifyUsingFilter({
       countries,
       job_sort,
-      years,
-      search
-    })
+      years
+    }, search)
 
     yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
       ...data,

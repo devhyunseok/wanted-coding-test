@@ -1,7 +1,8 @@
 import { createAction, handleActions } from 'redux-actions';
 import { GET_JOB_FILTERS_SUCCESSFUL, GET_JOB_FILTERS_FAILURE } from 'sagas/jobSagaModules';
+import { classifySelectedFilter } from 'modules/jobFilterUtils';
 
-/**
+/** 
  * Action Types
  */
 const JOB_FILTER = 'JOB_FILTER__';
@@ -10,6 +11,7 @@ const SELECT_JOB_SORT = `${JOB_FILTER}SELECT_JOB_SORT`;
 const SELECT_COUNTRY = `${JOB_FILTER}SELECT_COUNTRY`;
 const SELECT_YEAR = `${JOB_FILTER}SELECT_YEAR`;
 const SELECT_LOCATION = `${JOB_FILTER}SELECT_LOCATION`;
+const RESET_JOB_FILTER = `${JOB_FILTER}RESET_JOB_FILTER`;
 
 /**
  * Actions
@@ -19,6 +21,7 @@ export const selectJobSort = createAction(SELECT_JOB_SORT);
 export const selectCountry = createAction(SELECT_COUNTRY);
 export const selectYear = createAction(SELECT_YEAR);
 export const selectLocation = createAction(SELECT_LOCATION);
+export const resetJobFilter = createAction(RESET_JOB_FILTER);
 
 /**
  * Reducer
@@ -148,5 +151,19 @@ export default handleActions<State, any>({
       selectedYearKey: '',
       selectedLocations: []
     }
-  }
+  },
+  // 필터 > 초기화
+  [RESET_JOB_FILTER]: (state, action) => {
+    const { 
+      country, jobSort, year, locations
+    } = classifySelectedFilter({ countries: state.countries, job_sort: state.jobSort, years: state.years })
+
+    return {
+      ...state,
+      selectedCountry: country,
+      selectedSortKey: jobSort.key,
+      selectedYearKey: year.key,
+      selectedLocations: locations
+    }
+  },
 }, initialState);
