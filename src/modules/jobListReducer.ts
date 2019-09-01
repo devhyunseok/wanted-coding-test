@@ -1,5 +1,6 @@
 import { createAction, handleActions } from 'redux-actions';
-
+import { GET_JOB_LIST_SUCCESSFUL, GET_JOB_LIST_FAILURE } from 'sagas/jobSagaModules';
+import { IJob } from 'modules/IJob'
 /**
  * Action Types
  */
@@ -14,8 +15,14 @@ const APP = 'JOB_LIST__';
  * Reducer
  */
 
-const initialState = {
+interface State {
+  jobList: IJob[];
+  links: object;
+}
 
+const initialState: State = {
+  jobList: [],
+  links: {}
 };
 
 const arrayToObject = (array: any) => {
@@ -30,6 +37,25 @@ const arrayToObject = (array: any) => {
   return newObj
 }
 
-export default handleActions({
+export default handleActions<State, any>({
+  // Job List
+  [GET_JOB_LIST_SUCCESSFUL]: (state, action) => {
+    const { data, links } = action.payload;
 
+    return {
+      ...state,
+      jobList: data,
+      links: links
+    }
+  },
+  [GET_JOB_LIST_FAILURE]: (state, action) => {
+    const { error } = action.payload;
+    console.log(error);
+
+    return {
+      ...state,
+      jobs: [],
+      links: {}
+    }
+  }
 }, initialState);

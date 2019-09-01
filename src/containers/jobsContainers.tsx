@@ -8,11 +8,14 @@ import CompanyItem from 'components/flexList/CompanyItem';
 import { useDispatch } from "react-redux";
 import { fetchJobList } from 'sagas/jobSagaModules';
 import queryString from 'query-string';
+import { IJob } from 'modules/IJob';
+import { WANTED_URL } from 'api/apis';
 
 const JobsContainer = () => {
   const [isOpenFilterModal, setFilterModalVisible] = useState(false);
   const dispatch = useDispatch();
   const search: any = useSelector((state: any) => state.router.location.search);
+  const { jobList } = useSelector((state: any) => state.jobs);
 
   // useEffect(() => {
   //   const query = queryString.parse(search);
@@ -51,7 +54,13 @@ const JobsContainer = () => {
       }}/>
     </FilterWrapper>
     <FlexHorizontalWrapper>
-      <CompanyItem title='asdas'/>
+      {
+        jobList.map(((item: IJob) => {
+          return <CompanyItem key={item.id} position={item.position} bgImg={item.title_img.thumb}
+          likeCount={item.like_count} href={`${WANTED_URL}/wd/${item.id}`} 
+          companyInfo={{ name: item.company.name, country: item.address.country, location: item.address.location}}/>
+        }))
+      }
     </FlexHorizontalWrapper>
     <FilterModal isOpen={isOpenFilterModal} setVisible={setFilterModalVisible} onClickCloseButton={() => {
       setFilterModalVisible(false);

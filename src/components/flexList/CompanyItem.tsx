@@ -9,10 +9,8 @@ interface CompanyInfo {
 }
 
 interface Props {
-  title: string;
-  subTitle?: string;
+  position: string;
   bgImg?: string;
-  icon?: string;
   likeCount?: number;
   href?: string;
   target?: string;
@@ -20,7 +18,7 @@ interface Props {
 }
 
 const CompanyItem: React.FC<Props> = (props) => {
-  const { title, subTitle, bgImg, likeCount, href, target, companyInfo} = props;
+  const { position, bgImg, likeCount, href, target = '_self', companyInfo} = props;
 
   return (
     <Li>
@@ -33,7 +31,7 @@ const CompanyItem: React.FC<Props> = (props) => {
         </Header>
         <Footer>
           <dl>
-            <Title>{title}</Title>
+            <Title>{position}</Title>
             <CompanyInfo>
               {companyInfo && companyInfo.name}
               <br/>

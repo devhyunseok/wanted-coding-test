@@ -33,6 +33,12 @@ const GlobalStyle = createGlobalStyle`
     color: inherit;
     font: inherit;
   }
+
+  dd {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
 `;
 
 export default GlobalStyle;
