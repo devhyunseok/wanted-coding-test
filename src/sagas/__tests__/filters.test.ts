@@ -1,4 +1,4 @@
-import {call, put, take} from 'redux-saga/effects';
+import {call } from 'redux-saga/effects';
 import {expectSaga} from 'redux-saga-test-plan';
 import {
   GET_JOB_FILTERS_ASYNC,
@@ -6,7 +6,7 @@ import {
   GET_JOB_FILTERS_FAILURE,
   jobFiltersSaga
 } from 'sagas/jobSagaModules';
-import axiosInstance, { FILTERS, JOBS} from "api/apis";
+import axiosInstance, { FILTERS } from "api/apis";
 import {throwError} from "redux-saga-test-plan/providers";
 import {AxiosRequestConfig} from "axios";
 

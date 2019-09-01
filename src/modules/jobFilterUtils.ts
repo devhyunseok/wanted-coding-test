@@ -14,5 +14,14 @@ export const classifySelectedFilter = ({countries, job_sort, years} : IFilterPar
   }
 }
 
- 
+export const makeFilterQueryString = (countryKey: string, sortKey: string, yearKey: number, locations: any) => {
+  let locationsString = '';
   
+  if(locations.length > 0) {
+    locationsString = locations.reduce((acc:string, cur:any) => {
+      return `${acc}&locations=${cur.key}`;
+    }, '');
+  }
+ 
+  return `/?country=${countryKey}&job_sort=${sortKey}&year=${yearKey}${locationsString}`;
+};

@@ -4,8 +4,7 @@ import App from './App';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router'
 import ReactModal from 'react-modal';
-import { Route, Router, Switch } from 'react-router';
-// import * as serviceWorker from './serviceWorker';
+import { Router } from 'react-router';
 import createSagaMiddleware from 'redux-saga';
 import combineSagas from './sagas/combineSagas';
 import configureStore, { history } from './configureStore'

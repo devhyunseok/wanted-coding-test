@@ -1,10 +1,10 @@
-import {takeEvery, put, call, select} from 'redux-saga/effects';
+import { takeEvery, put, call, select } from 'redux-saga/effects';
 import { createAction } from 'redux-actions';
 import {FILTERS, JOBS} from "../api/apis";
 import { AxiosRequestConfig } from 'axios';
 import axiosInstance from "../api/apis";
 import { push } from 'connected-react-router';
-import makeFilterQueryString from 'modules/makeFilterQueryString';
+import { makeFilterQueryString } from 'modules/jobFilterUtils';
 import queryString from 'query-string';
 import { IJobFilterParams, IFilterParams } from 'dataStructure/IJobFilter';
 import { classifySelectedFilter } from 'modules/jobFilterUtils';
@@ -38,7 +38,7 @@ export const fetchJobFilters = createAction(GET_JOB_FILTERS_ASYNC);
 /**
  * 공고 리스트 조회
  */
-function* jobListSagaAction(action: any) {
+export function* jobListSagaAction(action: any) {
   const params : IJobFilterParams = action.payload;
   yield jobListSaga(params, GET_JOB_LIST_SUCCESSFUL, GET_JOB_LIST_FAILURE);
 }
@@ -79,14 +79,13 @@ function* jobListSaga(params: IJobFilterParams, successfully: string, failure: s
   try {
     const { data } = yield call(axiosInstance.request, requestConfig);
 
-    console.log(data);
-
     yield put({type: successfully, payload: {
       data: data.data,
       next: data.links.next && queryString.parse(data.links.next.split(JOBS)[1]),
       prev: data.links.prev && queryString.parse(data.links.prev)
     }});
   } catch (error) {
+    console.log(error);
     yield put({type: failure, payload: error});
   }
 
@@ -121,7 +120,7 @@ const classifyUsingFilter = ({countries, job_sort, years} : IFilterParams, searc
 /**
  * 공고 필터 정보 조회
  */
-function* jobFiltersSaga() {
+export function* jobFiltersSaga() {
   const requestConfig: AxiosRequestConfig = {
     method: 'GET',
     url: FILTERS

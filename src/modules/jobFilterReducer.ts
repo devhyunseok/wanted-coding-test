@@ -68,8 +68,6 @@ export default handleActions<State, any>({
   [SELECT_JOB_SORT]: (state, action) => {
     const key = action.payload;
 
-    console.log(key);
-
     return {
       ...state,
       selectedSortKey: key

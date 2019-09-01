@@ -1,10 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-
 import {Provider} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
-
 import {applyMiddleware, createStore} from "redux";
 import createSagaMiddleware from 'redux-saga';
 import combineSagas from "./sagas/combineSagas";
@@ -16,7 +14,6 @@ const sagaMiddleware = createSagaMiddleware();
 let store = createStore(combineReducers, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(combineSagas);
-
 
 it('renders without crashing', () => {
   ReactModal.setAppElement(document.createElement('div'));

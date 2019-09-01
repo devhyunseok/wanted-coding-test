@@ -26,10 +26,7 @@ export default handleActions<State, any>({
       prev: prev
     }
   },
-  [GET_JOB_LIST_FAILURE]: (state, action) => {
-    const { error } = action.payload;
-    console.log(error);
-
+  [GET_JOB_LIST_FAILURE]: (state) => {
     return {
       ...state,
       jobs: [],
@@ -51,10 +48,7 @@ export default handleActions<State, any>({
       prev: prev
     }
   },
-  [GET_JOB_LIST_NEXT_FAILURE]: (state, action) => {
-    const { error } = action.payload;
-    console.log(error);
-
+  [GET_JOB_LIST_NEXT_FAILURE]: (state) => {
     return {
       ...state,
       jobs: [],

@@ -1,7 +1,7 @@
-import {call, put, take} from 'redux-saga/effects';
-import {expectSaga} from 'redux-saga-test-plan';
+import { call } from 'redux-saga/effects';
+import { expectSaga } from 'redux-saga-test-plan';
 import {
-  jobListSaga,
+  jobListSagaAction,
   GET_JOB_LIST_SUCCESSFUL,
   GET_JOB_LIST_ASYNC,
   GET_JOB_LIST_FAILURE,
@@ -18,7 +18,7 @@ const requestPayload : AxiosRequestConfig = { method: 'GET', url: JOBS, params: 
 it('Fetch job list successfully', () => {
   const mockJobs = {data: [{}], links: [{}]};
 
-  return expectSaga(jobListSaga, actionPayload)
+  return expectSaga(jobListSagaAction, actionPayload)
     .provide([
       [call(axiosInstance.request, requestPayload), mockJobs]
     ])
@@ -31,7 +31,7 @@ it('Fetch job list successfully', () => {
 it('Fetch job list failure', () => {
   const mockError = new Error('Fetch Job List Failure');
 
-  return expectSaga(jobListSaga, actionPayload)
+  return expectSaga(jobListSagaAction, actionPayload)
     .provide([
       [call(axiosInstance.request, requestPayload), throwError(mockError)]
     ])

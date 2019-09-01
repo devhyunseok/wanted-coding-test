@@ -15,10 +15,11 @@ interface Props {
   href?: string;
   target?: string;
   companyInfo?: CompanyInfo;
+  rewardTotal?: string;
 }
 
 const CompanyItem: React.FC<Props> = (props) => {
-  const { position, bgImg, likeCount, href, target = '_self', companyInfo} = props;
+  const { position, bgImg, likeCount, href, target = '_self', companyInfo, rewardTotal} = props;
 
   return (
     <Li>
@@ -40,7 +41,7 @@ const CompanyItem: React.FC<Props> = (props) => {
               <span> {companyInfo && companyInfo.location} </span>
             </CompanyInfo>
           </dl>
-          <Reward>채용보상금 1,000,000원</Reward>
+          <Reward>채용보상금 {rewardTotal}</Reward>
         </Footer>
       </A>
     </Li>

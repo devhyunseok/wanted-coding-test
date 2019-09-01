@@ -41,7 +41,6 @@ const JobsContainer = () => {
       }));
     }
   
-    console.log('setIsFetching');
     setIsFetching(false);
   }
 
@@ -71,7 +70,8 @@ const JobsContainer = () => {
         jobList && jobList.map(((item: IJob, index: number) => {
           return <CompanyItem key={index} position={item.position} bgImg={item.title_img.thumb}
           likeCount={item.like_count} href={`${WANTED_URL}/wd/${item.id}`} 
-          companyInfo={{ name: item.company.name, country: item.address.country, location: item.address.location}}/>
+          companyInfo={{ name: item.company.name, country: item.address.country, location: item.address.location}}
+          rewardTotal={item.reward.formatted_total}/>
         }))
       }
     </FlexHorizontalWrapper>

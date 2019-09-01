@@ -7,7 +7,7 @@ import { setFilterUsed, selectJobSort, selectCountry, selectYear, selectLocation
 import SelectBox from '../components/SelectBox';
 import FilterItemButton from 'components/FilterItemButton';
 import { push } from 'connected-react-router';
-import makeFilterQueryString from 'modules/makeFilterQueryString';
+import { makeFilterQueryString } from 'modules/jobFilterUtils';
 import { fetchJobList } from 'sagas/jobSagaModules';
 
 interface Props {
@@ -19,8 +19,6 @@ interface Props {
 const locationsView = (selectedCountry: any, selectedLocations: any, dispatch: any, selectLocation: any) => {
   const locations = selectedCountry.locations;
 
-  console.log(locations);
-  console.log(selectedLocations);
   if(locations && locations.length === 0) {
     return null;
   }
@@ -55,11 +53,7 @@ const FilterModal: React.FC<Props> = (props) => {
   return (
     <Modal
       isOpen={isOpen}
-      onRequestClose={() => { setVisible(false)}}
-      // onAfterOpen={this.props.onAfterOpen.bind(this)}
-      // overlayClassName={[styles.overlay, 'bootstrap-dialog', this.props.overlayClassName].join(' ')}
-      // className={setDefaultIsNull(this.props.overrideClassName, [styles.dialogContent, this.props.className].join(' '))}>
->
+      onRequestClose={() => { setVisible(false)}}>
       <Header>
         <Reset onClick={onClickReset}>
           <Icon icon={'spinner11'}/>초기화
