@@ -54,6 +54,14 @@ const Li = styled.li`
   list-style: none;
   display: inline-block;
   vertical-align: top;
+
+  @media (max-width: 991px) and (min-width: 768px) {
+    width: 50%;
+  }
+
+  @media (max-width: 767px){
+    width: 50%;
+  }
 `;
 
 const A = styled.a`

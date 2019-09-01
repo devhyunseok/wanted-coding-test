@@ -124,6 +124,10 @@ const Header = styled.header`
   font-size: 16px;
   font-weight: 600;
   word-wrap: break-word;
+
+  @media (max-width: 767px) {
+    font-weight: 400;
+  }
 `;
 
 const Reset = styled.button`
@@ -154,6 +158,11 @@ const Content = styled.div`
   overflow-x: hidden;
   overflow-y: scroll;
   padding: 20px;
+
+
+  @media (max-width: 767px) {
+    max-height: 100vh;
+  }
 `;
 
 const SortWrapper = styled.div`
@@ -199,8 +208,24 @@ const CheckBox = styled.input`
 `;
 
 const Footer = styled.footer`
-  padding: 20px;
-  border-top: 1px solid #eee;
+  @media (min-width: 1200px) {
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  @media (max-width: 1199px) and (min-width: 992px) {
+      padding: 20px;
+      border-top: 1px solid #eee;
+  }
+
+  @media (max-width: 991px) and (min-width: 768px) {
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  @media (max-width: 767px) {
+    margin-top: 50px;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -211,6 +236,16 @@ const SubmitButton = styled.button`
   padding: 12px 20px;
   width: 100%;
   border-radius: 3px;
+
+  @media (max-width: 767px) {
+    font-size: 17px;
+    padding: 13px 20px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1003;
+  }
 `;
 
 export default FilterModal;

@@ -50,7 +50,20 @@ export const StyledModal = styled(ReactModalAdapter)`
     background-color: #fff;
     position: absolute;
     overflow: hidden;
-    
+
+    @media (max-width: 767px){
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      max-width: none;
+      width: 100%!important;
+      -webkit-transform: none;
+      transform: none;
+      border-radius: 0;
+      max-height: none;
+      overflow: visible;
+    }
     &.ReactModal__Content--after-open {
       …
     }
