@@ -1,9 +1,3 @@
-## Getting Started
-```sh
-$ npm install
-$ npm start
-```
-
 ## 사용한 주요 라이브러리
 - [create-react-app](https://create-react-app.dev/)
 - [typescript](https://www.typescriptlang.org/)
@@ -25,3 +19,9 @@ $ npm start
 - 과제 스펙 이미지에 있는 '적극 채용 중인 회사 리스트'의 경우,
   사이트 홈페이지를 확인해보니 /advertising/targeting api를 사용해야 할 것 같은데,
   제시 해주신 API 스펙에는 해당 API가 없어 스펙 아웃으로 판단하여 구현 하지 않았습니다.
+
+## Getting Started
+```sh
+$ npm install
+$ npm start
+```
