@@ -4,4 +4,6 @@ export interface IJobFilterParams {
     job_sort: string;
     year: number;
     locations: string[];
+    limit?: number;
+    offset?: number;
 }

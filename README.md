@@ -12,4 +12,6 @@
 #### 필터 URL 저장 부분
 
 
-#### locations string[] 타입?
+#### locations string[] 타입? URLSearchParams으로 해결
+
+#### links next에 year 값 누락.

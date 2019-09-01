@@ -34,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
     font: inherit;
   }
 
-  dd {
+  dd, ul {
     margin: 0;
     padding: 0;
     border: 0;
