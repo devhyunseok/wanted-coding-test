@@ -39,8 +39,12 @@ interface jobListParams {
 /**
  * 공고 리스트 조회
  */
-export function* jobListSaga(action: any) {
+export function* jobListSagaAction(action: any) {
   const params : jobListParams = action.payload;
+  yield jobListSaga(params);
+}
+
+export function* jobListSaga(params: jobListParams) {
   const requestConfig: AxiosRequestConfig ={
     method: 'GET',
     url: JOBS,
@@ -57,6 +61,48 @@ export function* jobListSaga(action: any) {
 
 }
 
+interface FilterParams {
+  countries: any;
+  job_sort: any;
+  years: any;
+  search: string;
+}
+
+const classifyUsingFilter = ({countries, job_sort, years, search} : FilterParams) => {
+  const query = queryString.parse(search);
+
+  if(Object.keys(query).length !== 0) {
+    const country = countries.filter((item:any) => item.key === query.country)[0];
+    const jobSort = job_sort.filter((item:any) => item.key === query.job_sort)[0];
+    const year = years.filter((item:any) => item.key === query.year)[0];
+    let locations = [];
+
+    if(query.locations && country.locations.length > 0 && query.locations.length > 0) {
+      locations = country.locations.filter((item:any) => {
+        return query.locations && query.locations.includes(item.key)
+      })
+    }
+
+    return {
+      country,
+      jobSort,
+      year,
+      locations
+      }
+  }
+
+  const country = countries.filter((item:any) => item.selected)[0];
+  const jobSort = job_sort.filter((item:any) => item.selected)[0];
+  const year = years.filter((item:any) => item.selected)[0];
+  const locations = country.locations.length > 0 ? country.locations.filter((item:any) => item.selected) : [];
+
+   return {
+     country,
+      jobSort,
+      year,
+      locations
+    }
+};
 
 
 /**
@@ -72,47 +118,35 @@ export function* jobFiltersSaga() {
     const { data } = yield call(axiosInstance.request, requestConfig);
     const { countries, job_sort, years } = data;
     const { search } = yield select(state => state.router.location);
-    const query = queryString.parse(search); // "?country=jp&job_sort=job.latest_order&year=-1&locations=all"
 
-    if(Object.keys(query).length !== 0) {
-      const country = countries.filter((item:any) => item.key === query.country)[0];
-      const jobSort = job_sort.filter((item:any) => item.key === query.job_sort)[0];
-      const year = years.filter((item:any) => item.key === query.year)[0];
-      let locations = [];
+    const { country, jobSort, year, locations } = classifyUsingFilter({
+      countries,
+      job_sort,
+      years,
+      search
+    })
 
-      if(query.locations && country.locations.length > 0 && query.locations.length > 0) {
-        locations = country.locations.filter((item:any) => {
-          return query.locations && query.locations.includes(item.key)
-        })
+    yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
+      ...data,
+      country, 
+      jobSort, 
+      year,
+      locations
       }
-
-      yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
-        ...data,
-        country,
-        jobSort,
-        year,
-        locations
-        }
-      });
-      return;
-    }
-
-    const country = countries.filter((item:any) => item.selected)[0];
-    const jobSort = job_sort.filter((item:any) => item.selected)[0];
-    const year = years.filter((item:any) => item.selected)[0];
-    const locations = country.locations.length > 0 ? country.locations.filter((item:any) => item.selected) : [];
-
+    });
+ 
     const filterQueryString = makeFilterQueryString(country.key, jobSort.key, year.key, locations);
     yield put(push(filterQueryString));
 
-    yield put({type: GET_JOB_FILTERS_SUCCESSFUL, payload: {
-        ...data,
-        country: country,
-        jobSort: jobSort,
-        year: year,
-        locations: locations
-      }
-    });
+    const jobListParams = {
+      tag_type_id: 669,
+      country: country.key,
+      job_sort: jobSort.key,
+      year: year.key,
+      location: locations.map((item:any) => item.key)
+    }
+
+    yield jobListSaga(jobListParams)
   } catch (error) {
     console.log(error);
     yield put({type: GET_JOB_FILTERS_FAILURE, payload: error});
@@ -120,6 +154,6 @@ export function* jobFiltersSaga() {
 }
 
 export default [
-  takeEvery(GET_JOB_LIST_ASYNC, jobListSaga),
+  takeEvery(GET_JOB_LIST_ASYNC, jobListSagaAction),
   takeEvery(GET_JOB_FILTERS_ASYNC, jobFiltersSaga),
 ];

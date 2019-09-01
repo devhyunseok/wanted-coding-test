@@ -6,7 +6,6 @@ import { Route, Router, Switch } from 'react-router';
 import JobsContainer from 'containers/jobsContainers';
 
 const App: React.FC = () => {
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,7 +16,7 @@ const App: React.FC = () => {
     <Fragment>
       <GlobalStyle/>
       <Switch>
-          <Route exact path="/" render={() => (<JobsContainer/>)} />
+        <Route exact path="/" render={() => (<JobsContainer/>)} />
       </Switch>
     </Fragment>
   );

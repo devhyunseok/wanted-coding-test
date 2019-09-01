@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { ReactChildren } from 'react';
 import styled from 'styled-components';
 import ActiveRecruitItem from "./ActiveRecruitItem";
 
 interface Props {
+  children?: JSX.Element[] | JSX.Element
 }
 
 const FlexHorizontalWrapper: React.FC<Props> = (props) => {
-
+  const { children } = props;
   return (
     <Ul>
-      <ActiveRecruitItem title={'사이트'}
-                         subTitle={'11개 포지션'}
-                         bgImg={''}
-                         profileImg={''}
-      />
+      {children}
     </Ul>
   );
 };

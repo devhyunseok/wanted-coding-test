@@ -1,16 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import ActionButton from "components/ActionButton";
 import FlexHorizontalWrapper from "components/flexList/FlexHorizontalWrapper";
 import FilterModal from "containers/FilterModal";
 import styled from 'styled-components';
+import CompanyItem from 'components/flexList/CompanyItem';
+import { useDispatch } from "react-redux";
+import { fetchJobList } from 'sagas/jobSagaModules';
+import queryString from 'query-string';
 
-const CounterContainer = () => {
+const JobsContainer = () => {
   const [isOpenFilterModal, setFilterModalVisible] = useState(false);
-  // TODO: any 타입 개선.
-  const counter: any = useSelector((state: any) => {
-    return state.jobs;
-  });
+  const dispatch = useDispatch();
+  const search: any = useSelector((state: any) => state.router.location.search);
+
+  // useEffect(() => {
+  //   const query = queryString.parse(search);
+  //   const { country, job_sort, year, locations } = query;
+
+  //   const jobListParams = {
+  //     tag_type_id: 669,
+  //     country: country,
+  //     job_sort: job_sort,
+  //     year: year,
+  //     location: locations
+  //   }
+
+  //   dispatch(fetchJobList(jobListParams));
+  // }, []);
 
   return (
   <AppWrapper>
@@ -33,7 +50,9 @@ const CounterContainer = () => {
         setFilterModalVisible(true);
       }}/>
     </FilterWrapper>
-    <FlexHorizontalWrapper/>
+    <FlexHorizontalWrapper>
+      <CompanyItem title='asdas'/>
+    </FlexHorizontalWrapper>
     <FilterModal isOpen={isOpenFilterModal} setVisible={setFilterModalVisible} onClickCloseButton={() => {
       setFilterModalVisible(false);
     }}/>
@@ -57,4 +76,4 @@ const FilterWrapper = styled.div`
   justify-content: space-between;
 `;
 
-export default CounterContainer;
+export default JobsContainer;
